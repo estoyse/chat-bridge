@@ -12,15 +12,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import {
-  IconMicrophone,
-  IconPaperclip,
-  IconPlus,
-  IconSearch,
-  IconSend,
-  IconSparkles,
-} from "@tabler/icons-react";
 import { useRef, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Attachment01Icon,
+  Mic01Icon,
+  PlusSignCircleIcon,
+  Search01Icon,
+  SentIcon,
+  StarsIcon,
+} from "@hugeicons/core-free-icons";
 
 export default function ChatForm() {
   const [message, setMessage] = useState("");
@@ -61,10 +62,6 @@ export default function ChatForm() {
 
   return (
     <div className='w-full'>
-      <h1 className='mb-7 mx-auto max-w-2xl text-center text-2xl font-semibold leading-9 text-foreground px-1 text-pretty whitespace-pre-wrap'>
-        How can I help you today?
-      </h1>
-
       <form onSubmit={handleSubmit} className='group/composer w-full'>
         <input
           ref={fileInputRef}
@@ -76,7 +73,7 @@ export default function ChatForm() {
 
         <div
           className={cn(
-            "w-full max-w-2xl mx-auto bg-transparent dark:bg-muted/50 cursor-text overflow-clip bg-clip-padding p-2.5 shadow-lg border border-border transition-all duration-200",
+            "w-full max-w-2xl mx-auto bg-muted dark:bg-muted/50 cursor-text overflow-clip bg-clip-padding p-2.5 shadow-lg border border-border transition-all duration-200",
             {
               "rounded-3xl grid grid-cols-1 grid-rows-[auto_1fr_auto]":
                 isExpanded,
@@ -125,7 +122,11 @@ export default function ChatForm() {
                   size='icon'
                   className='h-9 w-9 rounded-full hover:bg-accent outline-none ring-0'
                 >
-                  <IconPlus className='size-6 text-muted-foreground' />
+                  <HugeiconsIcon
+                    icon={PlusSignCircleIcon}
+                    strokeWidth={2}
+                    className='size-6 text-muted-foreground'
+                  />
                 </Button>
               </DropdownMenuTrigger>
 
@@ -138,7 +139,11 @@ export default function ChatForm() {
                     className='rounded-[calc(1rem-6px)]'
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <IconPaperclip size={20} className='opacity-60' />
+                    <HugeiconsIcon
+                      icon={Attachment01Icon}
+                      strokeWidth={2}
+                      className='opacity-60'
+                    />
                     Add photos & files
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -146,7 +151,11 @@ export default function ChatForm() {
                     onClick={() => {}}
                   >
                     <div className='flex items-center gap-2'>
-                      <IconSparkles size={20} className='opacity-60' />
+                      <HugeiconsIcon
+                        icon={StarsIcon}
+                        strokeWidth={2}
+                        className='opacity-60'
+                      />
                       Agent mode
                     </div>
                   </DropdownMenuItem>
@@ -154,7 +163,11 @@ export default function ChatForm() {
                     className='rounded-[calc(1rem-6px)]'
                     onClick={() => {}}
                   >
-                    <IconSearch size={20} className='opacity-60' />
+                    <HugeiconsIcon
+                      icon={Search01Icon}
+                      size={20}
+                      className='opacity-60'
+                    />
                     Deep Research
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -173,7 +186,10 @@ export default function ChatForm() {
                 size='icon'
                 className='h-9 w-9 rounded-full hover:bg-accent'
               >
-                <IconMicrophone className='size-5 text-muted-foreground' />
+                <HugeiconsIcon
+                  icon={Mic01Icon}
+                  className='size-5 text-muted-foreground'
+                />
               </Button>
 
               {message.trim() && (
@@ -182,7 +198,10 @@ export default function ChatForm() {
                   size='icon'
                   className='h-9 w-9 rounded-full'
                 >
-                  <IconSend className='size-5' />
+                  <HugeiconsIcon
+                    icon={SentIcon}
+                    className='size-5 translate-y-px -translate-x-px'
+                  />
                 </Button>
               )}
             </div>
