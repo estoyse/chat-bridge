@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Attachment01Icon,
@@ -22,6 +22,7 @@ import {
   SentIcon,
   StarsIcon,
 } from "@hugeicons/core-free-icons";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
 export default function ChatForm({
   sendMessage,
@@ -30,10 +31,19 @@ export default function ChatForm({
   sendMessage: (message: string) => void;
   isPending: boolean;
 }) {
+  const { start, stop, onResult, error, listening, isSupported } =
+    useSpeechRecognition();
   const [message, setMessage] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    onResult(result => {
+      console.log("Speech result:", result);
+      setMessage(result.transcript);
+    });
+  }, [onResult]);
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -195,12 +205,29 @@ export default function ChatForm({
                 type='button'
                 variant='ghost'
                 size='icon'
-                className='h-9 w-9 rounded-full hover:bg-accent'
+                disabled={isSupported === false}
+                className={cn(
+                  "h-9 w-9 rounded-full hover:bg-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed",
+                  {
+                    "bg-black text-white": listening,
+                  }
+                )}
+                onClick={() => {
+                  if (listening) {
+                    stop();
+                  } else {
+                    start();
+                  }
+                }}
+                title={
+                  isSupported === false
+                    ? "Speech recognition not supported in your browser"
+                    : listening
+                    ? "Stop recording"
+                    : "Start voice input"
+                }
               >
-                <HugeiconsIcon
-                  icon={Mic01Icon}
-                  className='size-5 text-muted-foreground'
-                />
+                <HugeiconsIcon icon={Mic01Icon} className='size-5' />
               </Button>
 
               {message.trim() && (
