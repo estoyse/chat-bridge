@@ -29,7 +29,7 @@ export default function Page() {
 
   return (
     <div className='flex flex-col h-screen bg-background'>
-      <ChatMessages messages={messages} />
+      <ChatMessages messages={messages} isLoading={isPending} />
       <div className='fixed pb-6 left-0 right-0 bottom-0 bg-background'>
         <ChatForm sendMessage={handleSendMessage} isPending={isPending} />
       </div>

@@ -13,9 +13,13 @@ type Message = {
 
 type ChatMessagesProps = {
   messages: Message[];
+  isLoading: boolean;
 };
 
-export default function ChatMessages({ messages }: ChatMessagesProps) {
+export default function ChatMessages({
+  messages,
+  isLoading,
+}: ChatMessagesProps) {
   const [isCopied, setIsCopied] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +29,7 @@ export default function ChatMessages({ messages }: ChatMessagesProps) {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isLoading]);
 
   const handleCopy = async (text: string) => {
     const success = await copyToClipboard(text);
@@ -64,6 +68,16 @@ export default function ChatMessages({ messages }: ChatMessagesProps) {
           )}
         </article>
       ))}
+      {isLoading && (
+        <div className='flex justify-start mb-4 p-4 '>
+          <div className='flex items-center justify-center space-x-1 rounded-lg mx-2'>
+            <div className='h-2 w-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+            <div className='h-2 w-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+            <div className='h-2 w-2 bg-gray-500 rounded-full animate-bounce'></div>
+          </div>
+          <span className=''>Thinking...</span>
+        </div>
+      )}
       <div ref={messagesEndRef} />
     </div>
   );
