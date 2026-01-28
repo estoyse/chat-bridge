@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { copyToClipboard } from "@/lib/copyToClipboard";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MarkdownRenderer } from "./markdownRenderer";
 
 type Message = {
@@ -17,6 +17,15 @@ type ChatMessagesProps = {
 
 export default function ChatMessages({ messages }: ChatMessagesProps) {
   const [isCopied, setIsCopied] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleCopy = async (text: string) => {
     const success = await copyToClipboard(text);
@@ -55,6 +64,7 @@ export default function ChatMessages({ messages }: ChatMessagesProps) {
           )}
         </article>
       ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 }
