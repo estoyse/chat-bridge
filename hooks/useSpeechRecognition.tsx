@@ -44,6 +44,7 @@ const ERROR_MESSAGES: Record<SpeechErrorType, string> = {
 
 export function useSpeechRecognition() {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const callbackRef = useRef<((result: SpeechResult) => void) | null>(null);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<SpeechError | null>(null);
   const [isSupported, setIsSupported] = useState<boolean | null>(null);
@@ -127,6 +128,28 @@ export function useSpeechRecognition() {
         setListening(false);
       };
 
+      recognition.onresult = (event: any) => {
+        try {
+          const result = event.results[event.resultIndex][0];
+          const speechResult: SpeechResult = {
+            transcript: result.transcript,
+            isFinal: event.results[event.resultIndex].isFinal,
+          };
+
+          if (callbackRef.current) {
+            callbackRef.current(speechResult);
+          }
+        } catch (err) {
+          console.error("Error processing speech result:", err);
+          const errorObj: SpeechError = {
+            type: "unknown",
+            message: "Error processing speech. Please try again.",
+          };
+          setError(errorObj);
+          toast.error(errorObj.message, { duration: 4000 });
+        }
+      };
+
       recognition.onerror = (event: any) => {
         const errorType = mapErrorType(event.error);
         const errorObj: SpeechError = {
@@ -175,25 +198,7 @@ export function useSpeechRecognition() {
   }, []);
 
   const onResult = useCallback((callback: (result: SpeechResult) => void) => {
-    if (!recognitionRef.current) return;
-
-    recognitionRef.current.onresult = (event: any) => {
-      try {
-        const result = event.results[event.resultIndex][0];
-        callback({
-          transcript: result.transcript,
-          isFinal: event.results[event.resultIndex].isFinal,
-        });
-      } catch (err) {
-        console.error("Error processing speech result:", err);
-        const errorObj: SpeechError = {
-          type: "unknown",
-          message: "Error processing speech. Please try again.",
-        };
-        setError(errorObj);
-        toast.error(errorObj.message, { duration: 4000 });
-      }
-    };
+    callbackRef.current = callback;
   }, []);
 
   useEffect(() => {

@@ -31,7 +31,7 @@ export default function ChatForm({
   sendMessage: (message: string) => void;
   isPending: boolean;
 }) {
-  const { start, stop, onResult, error, listening, isSupported } =
+  const { start, stop, onResult, listening, isSupported } =
     useSpeechRecognition();
   const [message, setMessage] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
@@ -40,7 +40,6 @@ export default function ChatForm({
 
   useEffect(() => {
     onResult(result => {
-      console.log("Speech result:", result);
       setMessage(result.transcript);
     });
   }, [onResult]);
