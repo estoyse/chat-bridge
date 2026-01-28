@@ -41,6 +41,14 @@ export default function ChatMessages({
 
   return (
     <div className='flex flex-col flex-1 overflow-y-auto w-full md:px-24 px-8 pt-4 max-w-4xl mx-auto pb-32'>
+      {messages.length === 0 && (
+        <div className='flex flex-col items-center justify-center h-full'>
+          <h1 className='text-2xl font-bold'>Chat Bridge</h1>
+          <p className='text-muted-foreground'>
+            Ask me anything, I'll try my best to help you.
+          </p>
+        </div>
+      )}
       {messages.map((msg, index) => (
         <article
           key={index}
