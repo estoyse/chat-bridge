@@ -4,6 +4,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { copyToClipboard } from "@/lib/copyToClipboard";
 import { useState } from "react";
+import { MarkdownRenderer } from "./markdownRenderer";
 
 type Message = {
   role: "user" | "assistant";
@@ -26,7 +27,7 @@ export default function ChatMessages({ messages }: ChatMessagesProps) {
   };
 
   return (
-    <div className='flex flex-col h-screen justify-start w-full md:px-24 px-8 pt-4 max-w-4xl mx-auto scroll-pb-36'>
+    <div className='flex flex-col flex-1 overflow-y-auto w-full md:px-24 px-8 pt-4 max-w-4xl mx-auto pb-32'>
       {messages.map((msg, index) => (
         <article
           key={index}
@@ -34,7 +35,7 @@ export default function ChatMessages({ messages }: ChatMessagesProps) {
             msg.role === "user" ? "max-w-3/4 self-end bg-gray-200" : "w-full"
           }`}
         >
-          <p className={msg.role === "user" ? "" : "p-2"}>{msg.message}</p>
+          <MarkdownRenderer content={msg.message} />
           {msg.role === "assistant" && (
             <div className='actions'>
               <Tooltip>
