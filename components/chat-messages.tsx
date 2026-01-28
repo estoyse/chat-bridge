@@ -1,35 +1,59 @@
-import { CopyIcon } from "@hugeicons/core-free-icons";
+import { CopyIcon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { Button } from "./ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { copyToClipboard } from "@/lib/copyToClipboard";
+import { useState } from "react";
 
-export default function ChatMessages() {
+type Message = {
+  role: "user" | "assistant";
+  message: string;
+};
+
+type ChatMessagesProps = {
+  messages: Message[];
+};
+
+export default function ChatMessages({ messages }: ChatMessagesProps) {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = async (text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    }
+  };
+
   return (
-    <div className='flex flex-col h-screen justify-start  w-full px-24 pt-4 max-w-4xl mx-auto'>
-      <article className='w-3/4 text-left self-end bg-gray-200 p-4 rounded-lg'>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          quod.
-        </p>
-      </article>
-      <article className='w-full text-left self-end p-4 rounded-lg mt-4'>
-        <p className='p-2'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          quod.
-        </p>
-        <div className='actions'>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant='ghost'>
-                <HugeiconsIcon icon={CopyIcon} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side='bottom'>
-              <p>Copy</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      </article>
+    <div className='flex flex-col h-screen justify-start w-full md:px-24 px-8 pt-4 max-w-4xl mx-auto scroll-pb-36'>
+      {messages.map((msg, index) => (
+        <article
+          key={index}
+          className={`text-left p-4 rounded-lg mt-4 ${
+            msg.role === "user" ? "max-w-3/4 self-end bg-gray-200" : "w-full"
+          }`}
+        >
+          <p className={msg.role === "user" ? "" : "p-2"}>{msg.message}</p>
+          {msg.role === "assistant" && (
+            <div className='actions'>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant='ghost'
+                    onClick={() => handleCopy(msg.message)}
+                  >
+                    <HugeiconsIcon icon={isCopied ? Tick02Icon : CopyIcon} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side='bottom'>
+                  <p>{isCopied ? "Copied!" : "Copy"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          )}
+        </article>
+      ))}
     </div>
   );
 }

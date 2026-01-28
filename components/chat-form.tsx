@@ -23,16 +23,27 @@ import {
   StarsIcon,
 } from "@hugeicons/core-free-icons";
 
-export default function ChatForm() {
+export default function ChatForm({
+  sendMessage,
+  isPending,
+}: {
+  sendMessage: (message: string) => void;
+  isPending: boolean;
+}) {
   const [message, setMessage] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
     if (message.trim()) {
+      sendMessage(message);
+
+      if (isPending) {
+        return;
+      }
       setMessage("");
       setIsExpanded(false);
 
