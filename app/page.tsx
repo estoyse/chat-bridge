@@ -1,6 +1,7 @@
 "use client";
 import ChatForm from "@/components/chat-form";
 import ChatMessages from "@/components/chat-messages";
+import TopBar from "@/components/top-bar";
 import { useChatMutation } from "@/hooks/useChatMutation";
 import { useState } from "react";
 
@@ -29,6 +30,7 @@ export default function Page() {
 
   return (
     <div className='flex flex-col h-screen bg-background'>
+      <TopBar />
       <ChatMessages messages={messages} isLoading={isPending} />
       <div className='fixed pb-6 left-0 right-0 bottom-0 bg-background'>
         <ChatForm sendMessage={handleSendMessage} isPending={isPending} />
