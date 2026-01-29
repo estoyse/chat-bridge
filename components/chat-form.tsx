@@ -81,7 +81,7 @@ export default function ChatForm({
   };
 
   return (
-    <div className='w-full'>
+    <div className='w-full sm:px-24 px-8'>
       <form onSubmit={handleSubmit} className='group/composer w-full'>
         <input
           ref={fileInputRef}
